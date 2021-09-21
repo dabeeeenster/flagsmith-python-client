@@ -2,7 +2,7 @@ import logging
 
 import requests
 
-from .analytics import AnalyticsProc
+from .analytics import AnalyticsProcessor
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ class Flagsmith:
         self.flags_endpoint = api + FLAGS_ENDPOINT
         self.identities_endpoint = api + IDENTITY_ENDPOINT
         self.traits_endpoint = api + TRAIT_ENDPOINT
-        self._analytics_proc = AnalyticsProc(environment_id, api)
+        self._analytics_processor = AnalyticsProcessor(environment_id, api)
 
     def get_flags(self, identity=None):
         """
@@ -66,7 +66,7 @@ class Flagsmith:
         data = self._get_flags_response(feature_name)
         if data:
             feature_id = data["feature"]["id"]
-            self._analytics_proc.track_feature(feature_id)
+            self._analytics_processor.track_feature(feature_id)
             return True
 
         return False
@@ -88,7 +88,7 @@ class Flagsmith:
             return None
 
         feature_id = data["feature"]["id"]
-        self._analytics_proc.track_feature(feature_id)
+        self._analytics_processor.track_feature(feature_id)
 
         return data["enabled"]
 
@@ -108,7 +108,7 @@ class Flagsmith:
         if not data:
             return None
         feature_id = data["feature"]["id"]
-        self._analytics_proc.track_feature(feature_id)
+        self._analytics_processor.track_feature(feature_id)
         return data["feature_state_value"]
 
     def get_trait(self, trait_key, identity):
